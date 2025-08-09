@@ -22,6 +22,29 @@
     "urlToImage": "https://images.example.com/lunar-lander.jpg",
     "publishedAt": "2025-07-20T21:30:00Z",
     "source": "Orbital Times"
-  }
+  },
+    {
+        "title": "NASA's Newest Telescope Captures Stunning Images of Distant Galaxies",
+        "url": "https://example-news.com/nasa-telescope-images",
+        "description": "Scientists are excited by the first light images from the James Webb Space Telescope's successor, revealing new details about the early universe.",
+        "urlToImage": "https://placehold.co/600x400/1f2833/c5c6c7?text=Galaxies",
+        "publishedAt": "2023-10-27T10:00:00Z",
+        "source": "Space News Daily"
+    },
+    {
+        "title": "New Study Suggests Evidence of Water on Mars Is Widespread",
+        "url": "https://example-news.com/water-on-mars-study",
+        "description": "Rover data has provided compelling evidence that liquid water may be more common on the red planet than previously thought, boosting the search for life.",
+        "urlToImage": "https://placehold.co/600x400/1f2833/c5c6c7?text=Mars",
+        "publishedAt": "2023-10-26T14:30:00Z",
+        "source": "AstroWorld Magazine"
+    },
+    {
+        "title": "European Space Agency Announces Mission to Jupiter's Moons",
+        "url": "https://example-news.com/esa-jupiter-mission",
+        "description": "The ESA's new mission will focus on exploring the icy moons of Jupiter, including Europa and Ganymede, to search for signs of a subsurface ocean.",
+        "urlToImage": "https://placehold.co/600x400/1f2833/c5c6c7?text=Jupiter+Moons",
+        "publishedAt": "2023-10-25T09:15:00Z",
+        "source": "Global Space Report"
+    }
 ]
-
