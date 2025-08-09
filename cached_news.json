@@ -1,1 +1,27 @@
+[
+  {
+    "title": "NASA's Artemis I Reveals Stunning Earthrise Photos",
+    "url": "https://www.example.com/nasa-artemis-earthrise",
+    "description": "NASA's Artemis I mission returned breathtaking images of Earth rising over the lunar horizon, providing new perspectives for scientists and the public.",
+    "urlToImage": "https://images.example.com/artemis-earthrise.jpg",
+    "publishedAt": "2025-08-01T10:15:00Z",
+    "source": "Space News Daily"
+  },
+  {
+    "title": "New Exoplanet Discovered in Habitable Zone",
+    "url": "https://www.example.com/exoplanet-habitable",
+    "description": "Astronomers using the XYZ telescope have discovered a rocky exoplanet in the habitable zone of a nearby star, raising new possibilities for life.",
+    "urlToImage": "https://images.example.com/exoplanet.jpg",
+    "publishedAt": "2025-07-28T07:40:00Z",
+    "source": "Astro Herald"
+  },
+  {
+    "title": "Private Company Launches Reusable Lunar Lander Prototype",
+    "url": "https://www.example.com/reusable-lunar-lander",
+    "description": "A private aerospace startup completed a successful demonstration of a reusable lunar lander prototype, marking a milestone for sustainable lunar exploration.",
+    "urlToImage": "https://images.example.com/lunar-lander.jpg",
+    "publishedAt": "2025-07-20T21:30:00Z",
+    "source": "Orbital Times"
+  }
+]
 
