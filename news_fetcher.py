@@ -24,15 +24,16 @@ def fetch_stellar_news():
     # Replace 'YOUR_API_KEY' with your actual API key from newsapi.org.
     # It's a good practice to store this in an environment variable, but for
     # this example, we'll keep it here for clarity.
-    api_key = "YOUR_API_KEY"
+    api_key = os.environ.get('NEWS_API_KEY')
 
     # The API endpoint for fetching top headlines. We can use the 'everything'
     # endpoint for more specific searches.
     api_url = "https://newsapi.org/v2/everything"
     
     # Check if the API key has been provided.
-    if api_key == "YOUR_API_KEY" or not api_key:
-        print("Error: API key is missing. Please sign up for a key at newsapi.org and update the script.")
+    # We will now check if the environment variable was successfully loaded.
+    if not api_key:
+        print("Error: News API key is missing. Please set 'NEWS_API_KEY' in your Vercel environment variables.")
         return []
 
     # Define the search parameters.
