@@ -5,12 +5,12 @@ from flask import Flask, render_template, send_from_directory
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()  # loads variables from .env
+load_dotenv() # loads variables from .env
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 
 NASA_API_KEY = os.getenv("NASA_API_KEY", "DEMO_KEY")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")  # optional, fallback provided in code
+NEWS_API_KEY = os.getenv("NEWS_API_KEY") # optional, fallback provided in code
 
 # --- Utilities / API wrappers ---
 
@@ -89,6 +89,18 @@ def load_poems():
             {"text": "The cosmos is within us. We are made of star-stuff.", "author": "Carl Sagan"}
         ]
 
+def load_constellations():
+    """Load local constellations from data/constellations.json (returns list)."""
+    try:
+        with open("data/constellations.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print("Constellations load error:", e)
+        return [
+            {"name": "Orion", "desc": "The Hunter — bright belt of three stars, visible during winter nights."},
+            {"name": "Cassiopeia", "desc": "W-shaped constellation, easy to spot near Polaris."}
+        ]
+
 # --- Routes ---
 
 @app.route("/")
@@ -97,17 +109,7 @@ def index():
     news = fetch_space_news(8)
     poems = load_poems()
     poem_of_day = random.choice(poems) if poems else None
-    # Constellation rotation: choose one from static list in data/constellations.json if present
-    constellations = []
-    try:
-        with open("data/constellations.json", "r", encoding="utf-8") as f:
-            constellations = json.load(f)
-    except Exception:
-        constellations = [
-            {"name": "Orion", "desc": "The Hunter — bright belt of three stars, visible during winter nights."},
-            {"name": "Cassiopeia", "desc": "W-shaped constellation, easy to spot near Polaris."},
-            {"name": "Lyra", "desc": "Small, bright, home of Vega and the Ring Nebula."}
-        ]
+    constellations = load_constellations()
     constellation = random.choice(constellations)
 
     return render_template("index.html",
@@ -115,6 +117,21 @@ def index():
                            news=news,
                            poem=poem_of_day,
                            constellation=constellation)
+
+@app.route("/about")
+def about_page():
+    return render_template("about.html")
+
+@app.route("/news")
+def news_page():
+    news = fetch_space_news(20) # Fetch more articles for a dedicated page
+    return render_template("news.html", news=news)
+    
+@app.route("/poems")
+def poems_page():
+    poems = load_poems()
+    return render_template("poems.html", poems=poems)
+
 
 # Serve a simple robots.txt or favicon optionally
 @app.route("/favicon.ico")
@@ -124,6 +141,4 @@ def favicon():
 
 
 if __name__ == "__main__":
-    # for development only; for production use gunicorn/uvicorn
     app.run(debug=True)
-
