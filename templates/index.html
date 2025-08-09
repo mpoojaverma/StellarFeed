@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StellarFeed - Your Daily Dose of the Cosmos</title>
+    <!-- Use Tailwind CSS for a clean and responsive design -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Use Inter font from Google Fonts -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
@@ -19,6 +21,14 @@
         }
         .text-neon-cyan {
             color: #0ff;
+        }
+        .card {
+            background-color: #1f2833;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
         }
     </style>
 </head>
@@ -105,7 +115,7 @@
                     {% endif %}
                 </div>
                 <div class="mt-8 text-center">
-                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-colors duration-300">Discover More</button>
+                    <a href="/about" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-colors duration-300">Discover More</a>
                 </div>
             </section>
         </div>
