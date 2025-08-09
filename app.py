@@ -91,7 +91,7 @@ def poems_page():
         except FileNotFoundError:
             static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
 
-        # Generate a new poem with the Gemini API on every visit.
+        # A list of topics to generate unique poems for.
         poem_topics = [
             "celestial bodies, the night sky, and wonder",
             "the vastness of space",
