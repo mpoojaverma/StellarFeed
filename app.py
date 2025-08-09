@@ -95,4 +95,45 @@ def poems_page():
         poem_topics = [
             "celestial bodies, the night sky, and wonder",
             "the vastness of space",
-          
+            "the birth of a star",
+            "the quiet beauty of the moon"
+        ]
+
+        generated_poems = []
+        for topic in poem_topics:
+            generated_poem_text = generate_stellar_poem(topic)
+            # Add the new poem to the list only if it was successfully generated.
+            if generated_poem_text and "error" not in generated_poem_text.lower():
+                 generated_poems.append({"text": generated_poem_text, "author": "Gemini AI"})
+            else:
+                 print(f"Failed to generate poem for topic: '{topic}'. Error: {generated_poem_text}")
+        
+        # Combine all the generated poems with all the static poems.
+        all_poems = generated_poems + static_poems
+        
+        print(f"Total poems to display: {len(all_poems)}") # A debug message for Vercel logs
+        
+        return render_template('poems.html', poems=all_poems)
+        
+    except Exception as e:
+        print(f"Error on poems page: {e}")
+        return render_template('error.html', error=str(e))
+
+
+@app.route('/about')
+def about_page():
+    """
+    Renders the about page with details about the app and APIs.
+    """
+    return render_template('about.html')
+
+
+@app.route("/favicon.ico")
+def favicon():
+    """Serves the favicon."""
+    return send_from_directory(os.path.join(app.root_path, "static"),
+                               "favicon.ico", mimetype="image/vnd.microsoft.icon")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
