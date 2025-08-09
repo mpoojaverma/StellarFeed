@@ -3,51 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - StellarFeed</title>
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>About StellarFeed</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0b0c10;
+            background-color: #0d1117;
             color: #c5c6c7;
         }
         .container {
-            max-width: 800px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="container mx-auto">
-        <header class="text-center my-8">
-            <a href="/" class="text-teal-400 hover:underline">
-                <h1 class="text-4xl md:text-5xl font-bold">StellarFeed</h1>
-            </a>
-            <p class="text-md md:text-lg mt-2 text-gray-400">About the app and its purpose.</p>
-        </header>
+<body class="bg-gray-900 text-gray-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full z-10">
+        <div class="container flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400">
+                        <path d="M12 2L2 22h20L12 2z" />
+                        <path d="M12 5L5 19h14L12 5z" />
+                        <circle cx="12" cy="12" r="3" fill="#c5c6c7"/>
+                    </svg>
+                    <a href="/" class="text-xl font-bold text-teal-400 hover:text-teal-200 transition-colors duration-300">StellarFeed</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/news" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">News</a>
+                    <a href="/poems" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">Poems</a>
+                    <a href="/about" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-bold">About</a>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-button" class="text-gray-300 hover:text-teal-400 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-800 text-center transition-all duration-300 ease-in-out">
+            <a href="/news" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">News</a>
+            <a href="/poems" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">Poems</a>
+            <a href="/about" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">About</a>
+        </div>
+    </nav>
+    <main class="pt-24 container min-h-screen">
+        <h1 class="text-4xl font-extrabold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+            About StellarFeed
+        </h1>
+        <p class="text-xl text-center mb-12 text-gray-400">Discover the purpose and technology behind the app.</p>
 
-        <section class="my-10 bg-[#1f2833] rounded-lg p-6">
-            <h2 class="text-3xl font-bold text-gray-200 mb-4">About StellarFeed</h2>
-            <p class="text-gray-400 mb-4">
-                StellarFeed is a web application designed to bring you a daily collection of cosmic content. We aim to provide an engaging and visually appealing experience for anyone interested in astronomy and space exploration. Our goal is to make the universe a little more accessible to everyone.
+        <section class="p-8 bg-gray-800 rounded-xl shadow-lg mb-8">
+            <h2 class="text-3xl font-bold mb-4 text-teal-400">Our Mission</h2>
+            <p class="text-gray-300 leading-relaxed">
+                Welcome to StellarFeed, your daily dose of the universe! We bring the awe-inspiring beauty of space directly to you, curating a stunning collection of cosmic content. Whether you're a seasoned stargazer or just looking up for the first time, our goal is to make the wonders of astronomy and space exploration accessible and engaging for everyone.
             </p>
-            <h3 class="text-2xl font-semibold text-gray-200 mt-6 mb-2">API Integrations</h3>
-            <p class="text-gray-400">
-                This application is powered by data from two fantastic third-party APIs:
+        </section>
+
+        <section class="p-8 bg-gray-800 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-teal-400">API Integrations</h2>
+            <p class="text-gray-300 leading-relaxed mb-6">
+                This application is powered by data from three fantastic third-party APIs.
             </p>
-            <ul class="list-disc list-inside mt-2 text-gray-400">
-                <li>
-                    **NASA Astronomy Picture of the Day (APOD):** Used to fetch the daily featured space image and its explanation.
+            <ul class="list-disc list-inside space-y-4 text-gray-300">
+                <li class="pl-4">
+                    <strong class="text-teal-400">NASA Astronomy Picture of the Day (APOD):</strong> Used to fetch the daily featured space image and its explanation.
                 </li>
-                <li>
-                    **NewsAPI.org:** Used to provide the latest news articles related to space and astronomy.
+                <li class="pl-4">
+                    <strong class="text-teal-400">NewsAPI.org:</strong> Used to provide the latest news articles related to space and astronomy.
+                </li>
+                <li class="pl-4">
+                    <strong class="text-teal-400">Google Gemini API:</strong> Used to generate a unique, creative poem on the vastness of space.
                 </li>
             </ul>
         </section>
-    </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-800 p-4 text-center mt-12 shadow-inner">
+        <p class="text-gray-400">&copy; 2024 StellarFeed. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
