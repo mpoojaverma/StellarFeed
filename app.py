@@ -66,13 +66,29 @@ def news_page():
 @app.route('/poems')
 def poems_page():
     try:
-        generated_poem_text = generate_stellar_poem("celestial bodies, the night sky, and wonder")
-        if not generated_poem_text:
-            generated_poem = {"text": "A whisper from the stars, a story untold.", "author": "StellarFeed AI"}
-        else:
-            generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
+        # Load static data from file within the route function.
+        try:
+            with open('data/poems.json', 'r') as f:
+                static_poems = json.load(f)
+        except FileNotFoundError:
+            static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
+
+        # Generate a new poem for each of the topics in a list.
+        poem_topics = [
+            "black holes",
+            "nebulae",
+            "supernovae",
+            "the Milky Way"
+        ]
         
-        all_poems = [generated_poem] + static_poems
+        generated_poems = []
+        for topic in poem_topics:
+            poem_text = generate_stellar_poem(topic)
+            if poem_text:
+                generated_poems.append({"text": poem_text, "author": "Gemini AI"})
+        
+        # Combine the new poems with the static poems for the page.
+        all_poems = generated_poems + static_poems
         
         return render_template('poems.html', poems=all_poems)
         
