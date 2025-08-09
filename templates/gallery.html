@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StellarFeed — Gallery</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <a href="{{ url_for('index') }}" class="logo">✨</a>
+      <div>
+        <h1>StellarFeed</h1>
+        <p class="sub">Image gallery — tonight's sky & space photography</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('news_page') }}">News</a>
+      <a href="{{ url_for('poems_page') }}">Poems</a>
+      <a href="{{ url_for('gallery') }}" class="active">Gallery</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h3>Gallery</h3>
+      <p class="muted">Curated space images & APOD highlights. Click any image to enlarge.</p>
+
+      {% if images %}
+        <div class="gallery-grid">
+          {% for img in images %}
+            <figure class="gallery-item" tabindex="0" data-src="{{ img.url }}" data-title="{{ img.title or '' }}" data-desc="{{ img.description or '' }}">
+              <img src="{{ img.url }}" alt="{{ img.title or 'Space image' }}" loading="lazy">
+              <figcaption>
+                <strong>{{ img.title or 'Untitled' }}</strong>
+                <span class="source">{{ img.source or '' }}</span>
+              </figcaption>
+            </figure>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No images available right now. Try again later.</p>
+      {% endif %}
+    </section>
+  </main>
+
+  <!-- Modal for enlarged image -->
+  <div id="img-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close" title="Close">✕</button>
+      <img id="modal-img" src="" alt="">
+      <div class="modal-meta">
+        <h4 id="modal-title"></h4>
+        <p id="modal-desc" class="muted"></p>
+        <a id="modal-link" class="btn" target="_blank" rel="noopener">Open Source</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>StellarFeed • curated gallery</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // small inline script to wire modal interactions (this complements static/js/script.js)
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('img-modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDesc = document.getElementById('modal-desc');
+      const modalLink = document.getElementById('modal-link');
+      const closeBtn = document.getElementById('modal-close');
+      const backdrop = document.getElementById('modal-backdrop');
+
+      function openModal(src, title, desc, link) {
+        modalImg.src = src;
+        modalImg.alt = title || 'Space image';
+        modalTitle.textContent = title || '';
+        modalDesc.textContent = desc || '';
+        modalLink.href = link || src || '#';
+        modal.setAttribute('aria-hidden', 'false');
+        modal.classList.add('open');
+      }
+
+      function closeModal() {
+        modal.setAttribute('aria-hidden', 'true');
+        modalImg.src = '';
+        modal.classList.remove('open');
+      }
+
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', () => {
+          openModal(item.dataset.src, item.dataset.title, item.dataset.desc, item.dataset.src);
+        });
+        // keyboard accessibility: Enter key
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') openModal(item.dataset.src, item.dataset.title, item.dataset.desc, item.dataset.src);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      backdrop.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+    });
+  </script>
+</body>
+</html>
+
