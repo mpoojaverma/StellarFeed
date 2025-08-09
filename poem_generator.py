@@ -17,7 +17,7 @@ def generate_stellar_poem(topic):
     """
     # This line is correct. It fetches the API key from Vercel's environment.
     api_key = os.environ.get('GOOGLE_API_KEY')
-    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={api_key}"
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={AIzaSyCiatT2gMsl6bQGzJrdMEbP5hh1VTbU6bc}"
     
     if not api_key:
         return "Failed to generate a poem. The Google API key is missing from your Vercel environment variables."
