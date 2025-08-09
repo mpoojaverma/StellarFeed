@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Orion",
+        "desc": "The Hunter — a prominent constellation located on the celestial equator and visible throughout the world. It is one of the most conspicuous and recognizable constellations in the night sky."
+    },
+    {
+        "name": "Cassiopeia",
+        "desc": "The Queen — a W-shaped or M-shaped constellation, depending on the season. It is easy to spot in the northern sky and is named after the boastful queen Cassiopeia in Greek mythology."
+    },
+    {
+        "name": "Lyra",
+        "desc": "The Lyre — a small constellation noted for its primary star, Vega, which is one of the brightest stars in the night sky. It contains the Ring Nebula, a well-known planetary nebula."
+    },
+    {
+        "name": "Ursa Major",
+        "desc": "The Great Bear — a large constellation in the northern sky. Its most famous part is the Big Dipper, an asterism of seven bright stars that form a dipper or ladle shape."
+    },
+    {
+        "name": "Andromeda",
+        "desc": "The Chained Maiden — a constellation in the northern celestial hemisphere. Its most notable feature is the Andromeda Galaxy (M31), the nearest major galaxy to the Milky Way."
+    }
+]
