@@ -1,1 +1,37 @@
+# Environment / secrets
+.env
+
+# Python virtual environments
+venv/
+env/
+.venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Byte-compiled files created by editors
+*.pyc
+*.pyo
+
+# Data caches / runtime files
+data/*.json
+cached_news.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Distribution / build
+dist/
+build/
+*.egg-info/
 
