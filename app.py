@@ -1,145 +1,107 @@
 import os
 import random
 import json
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, jsonify
+from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
+
+# We need to explicitly import our custom modules to use their functions.
+from news_fetcher import fetch_stellar_news
+from poem_generator import generate_stellar_poem
+from image_fetcher import fetch_random_apod_image
 
 load_dotenv() # loads variables from .env
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
+CORS(app)  # Enable CORS for the app
 
-NASA_API_KEY = os.getenv("NASA_API_KEY", "DEMO_KEY")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY") # optional, fallback provided in code
+# --- Load Static Data ---
+# These are loaded once at the start of the application.
+try:
+    with open('data/poems.json', 'r') as f:
+        static_poems = json.load(f)
+except FileNotFoundError:
+    static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
 
-# --- Utilities / API wrappers ---
+try:
+    with open('data/constellations.json', 'r') as f:
+        constellations = json.load(f)
+except FileNotFoundError:
+    constellations = [{"name": "Orion", "desc": "The Hunter of the night sky."}]
 
-def fetch_apod():
-    """Fetch NASA APOD (Astronomy Picture of the Day)."""
-    url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}"
-    try:
-        r = requests.get(url, timeout=8)
-        r.raise_for_status()
-        return r.json()
-    except Exception as e:
-        print("APOD fetch error:", e)
-        # fallback local placeholder
-        return {
-            "title": "APOD currently unavailable",
-            "url": "/static/images/apod-placeholder.jpg",
-            "explanation": "Could not fetch APOD. Try again later."
-        }
 
-def fetch_space_news(limit=6):
+# --- Application Routes ---
+
+@app.route('/')
+def home():
     """
-    Fetch space/astronomy news.
-    Priority:
-      1) If NEWS_API_KEY is provided -> use NewsAPI (newsapi.org) for 'space OR astronomy' query
-      2) Otherwise fallback to Spaceflight News API (no key)
+    Renders the homepage with dynamic content.
+    The homepage focuses on the APOD, and provides links to other pages.
     """
-    # Try NewsAPI.org if key available
-    if NEWS_API_KEY:
-        url = "https://newsapi.org/v2/everything"
-        params = {
-            "q": "space OR astronomy OR nasa OR satellite OR rocket OR astrophysics",
-            "language": "en",
-            "pageSize": limit,
-            "sortBy": "publishedAt",
-            "apiKey": NEWS_API_KEY
-        }
-        try:
-            r = requests.get(url, params=params, timeout=8)
-            r.raise_for_status()
-            data = r.json()
-            return data.get("articles", [])[:limit]
-        except Exception as e:
-            print("NewsAPI fetch error:", e)
-
-    # Fallback to Spaceflight News API (no key)
     try:
-        r = requests.get(f"https://api.spaceflightnewsapi.net/v3/articles?_limit={limit}&_sort=publishedAt:desc", timeout=8)
-        r.raise_for_status()
-        data = r.json()
-        # normalize to common fields used in templates (title, url, summary, image, publishedAt, source)
-        normalized = []
-        for item in data:
-            normalized.append({
-                "title": item.get("title"),
-                "url": item.get("url"),
-                "description": item.get("summary") or item.get("newsSite"),
-                "urlToImage": item.get("imageUrl"),
-                "publishedAt": item.get("publishedAt"),
-                "source": item.get("newsSite") or "Spaceflight News"
-            })
-        return normalized
+        # Fetch a fresh APOD image and select a new poem/constellation for the main page.
+        apod_data = fetch_random_apod_image()
+        poem_of_day = random.choice(static_poems)
+        constellation_of_day = random.choice(constellations)
+        
+        return render_template('index.html', apod=apod_data, poem=poem_of_day, constellation=constellation_of_day)
+
     except Exception as e:
-        print("SpaceflightNews fetch error:", e)
-        return []
+        print(f"Error on home page: {e}")
+        return render_template('error.html', error=str(e))
 
-def load_poems():
-    """Load local poems/quotes from data/poems.json (returns list)."""
-    try:
-        with open("data/poems.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print("Poems load error:", e)
-        # fallback tiny list
-        return [
-            {"text": "I have loved the stars too fondly to be fearful of the night.", "author": "Sarah Williams"},
-            {"text": "The cosmos is within us. We are made of star-stuff.", "author": "Carl Sagan"}
-        ]
 
-def load_constellations():
-    """Load local constellations from data/constellations.json (returns list)."""
-    try:
-        with open("data/constellations.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print("Constellations load error:", e)
-        return [
-            {"name": "Orion", "desc": "The Hunter — bright belt of three stars, visible during winter nights."},
-            {"name": "Cassiopeia", "desc": "W-shaped constellation, easy to spot near Polaris."}
-        ]
-
-# --- Routes ---
-
-@app.route("/")
-def index():
-    apod = fetch_apod()
-    news = fetch_space_news(8)
-    poems = load_poems()
-    poem_of_day = random.choice(poems) if poems else None
-    constellations = load_constellations()
-    constellation = random.choice(constellations)
-
-    return render_template("index.html",
-                           apod=apod,
-                           news=news,
-                           poem=poem_of_day,
-                           constellation=constellation)
-
-@app.route("/about")
-def about_page():
-    return render_template("about.html")
-
-@app.route("/news")
+@app.route('/news')
 def news_page():
-    news = fetch_space_news(20) # Fetch more articles for a dedicated page
-    return render_template("news.html", news=news)
-    
-@app.route("/poems")
+    """
+    Renders the dedicated news page with fresh articles.
+    """
+    try:
+        # Fetch news every time the page is visited.
+        news_articles = fetch_stellar_news()
+        return render_template('news.html', news=news_articles)
+        
+    except Exception as e:
+        print(f"Error on news page: {e}")
+        return render_template('error.html', error=str(e))
+
+
+@app.route('/poems')
 def poems_page():
-    poems = load_poems()
-    return render_template("poems.html", poems=poems)
+    """
+    Renders the poems page with a dynamic poem from the Gemini API
+    and the rest from the static JSON file.
+    """
+    try:
+        # Generate a new poem with the Gemini API on every visit.
+        generated_poem_text = generate_stellar_poem("celestial bodies, the night sky, and wonder")
+        generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
+        
+        # Combine the new poem with the static poems for the page.
+        all_poems = [generated_poem] + static_poems
+        
+        return render_template('poems.html', poems=all_poems)
+        
+    except Exception as e:
+        print(f"Error on poems page: {e}")
+        return render_template('error.html', error=str(e))
 
 
-# Serve a simple robots.txt or favicon optionally
+@app.route('/about')
+def about_page():
+    """
+    Renders the about page with details about the app and APIs.
+    """
+    return render_template('about.html')
+
+
 @app.route("/favicon.ico")
 def favicon():
+    """Serves the favicon."""
     return send_from_directory(os.path.join(app.root_path, "static"),
                                "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-
