@@ -16,21 +16,6 @@ load_dotenv() # loads variables from .env
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Enable CORS for the app
 
-# --- Load Static Data ---
-# These are loaded once at the start of the application.
-try:
-    with open('data/poems.json', 'r') as f:
-        static_poems = json.load(f)
-except FileNotFoundError:
-    static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
-
-try:
-    with open('data/constellations.json', 'r') as f:
-        constellations = json.load(f)
-except FileNotFoundError:
-    constellations = [{"name": "Orion", "desc": "The Hunter of the night sky."}]
-
-
 # --- Application Routes ---
 
 @app.route('/')
@@ -40,6 +25,19 @@ def home():
     The homepage focuses on the APOD, and provides links to other pages.
     """
     try:
+        # Load static data from files within the route function to prevent startup crashes.
+        try:
+            with open('data/poems.json', 'r') as f:
+                static_poems = json.load(f)
+        except FileNotFoundError:
+            static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
+
+        try:
+            with open('data/constellations.json', 'r') as f:
+                constellations = json.load(f)
+        except FileNotFoundError:
+            constellations = [{"name": "Orion", "desc": "The Hunter of the night sky."}]
+
         # Fetch a fresh APOD image and select a new poem/constellation for the main page.
         apod_data = fetch_random_apod_image()
         poem_of_day = random.choice(static_poems)
@@ -74,6 +72,13 @@ def poems_page():
     and the rest from the static JSON file.
     """
     try:
+        # Load static data from file within the route function.
+        try:
+            with open('data/poems.json', 'r') as f:
+                static_poems = json.load(f)
+        except FileNotFoundError:
+            static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
+
         # Generate a new poem with the Gemini API on every visit.
         generated_poem_text = generate_stellar_poem("celestial bodies, the night sky, and wonder")
         generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
@@ -105,4 +110,3 @@ def favicon():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
