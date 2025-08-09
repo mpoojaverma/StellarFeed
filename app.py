@@ -1,111 +1,145 @@
 import os
-from flask import Flask, render_template, jsonify
-from flask_cors import CORS
-from news_fetcher import fetch_stellar_news
-from image_fetcher import fetch_random_apod_image
-from poem_generator import generate_stellar_poem
 import random
 import json
+from flask import Flask, render_template, send_from_directory
+import requests
+from dotenv import load_dotenv
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for the app
+load_dotenv() # loads variables from .env
 
-# Load static poems and constellations from JSON files.
-with open('data/poems.json', 'r') as f:
-    static_poems = json.load(f)
-with open('data/constellations.json', 'r') as f:
-    constellations = json.load(f)
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
+NASA_API_KEY = os.getenv("NASA_API_KEY", "DEMO_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY") # optional, fallback provided in code
 
-# --- Application Routes ---
+# --- Utilities / API wrappers ---
 
-@app.route('/')
-def home():
-    """
-    Renders the homepage with dynamic content from various APIs.
-    """
+def fetch_apod():
+    """Fetch NASA APOD (Astronomy Picture of the Day)."""
+    url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}"
     try:
-        # Fetch the Astronomy Picture of the Day.
-        apod = fetch_random_apod_image()
-        if not apod:
-            # Fallback to a placeholder if the API fails.
-            apod = {
-                "title": "CosmicPlaceholder",
-                "url": "https://placehold.co/1200x675/0d1117/c5c6c7?text=Image+Not+Available",
-                "explanation": "Could not fetch the Astronomy Picture of the Day. Please check the NASA API."
-            }
-
-        # Select a random static poem.
-        poem = random.choice(static_poems)
-
-        # Select a random constellation.
-        constellation = random.choice(constellations)
-
-        # Render the index.html template with the fetched data.
-        return render_template('index.html', apod=apod, poem=poem, constellation=constellation)
-
+        r = requests.get(url, timeout=8)
+        r.raise_for_status()
+        return r.json()
     except Exception as e:
-        print(f"An error occurred on the home page: {e}")
-        return render_template('error.html', error=str(e))
+        print("APOD fetch error:", e)
+        # fallback local placeholder
+        return {
+            "title": "APOD currently unavailable",
+            "url": "/static/images/apod-placeholder.jpg",
+            "explanation": "Could not fetch APOD. Try again later."
+        }
 
+def fetch_space_news(limit=6):
+    """
+    Fetch space/astronomy news.
+    Priority:
+      1) If NEWS_API_KEY is provided -> use NewsAPI (newsapi.org) for 'space OR astronomy' query
+      2) Otherwise fallback to Spaceflight News API (no key)
+    """
+    # Try NewsAPI.org if key available
+    if NEWS_API_KEY:
+        url = "https://newsapi.org/v2/everything"
+        params = {
+            "q": "space OR astronomy OR nasa OR satellite OR rocket OR astrophysics",
+            "language": "en",
+            "pageSize": limit,
+            "sortBy": "publishedAt",
+            "apiKey": NEWS_API_KEY
+        }
+        try:
+            r = requests.get(url, params=params, timeout=8)
+            r.raise_for_status()
+            data = r.json()
+            return data.get("articles", [])[:limit]
+        except Exception as e:
+            print("NewsAPI fetch error:", e)
 
-@app.route('/news')
-def news_page():
-    """
-    Renders the news page with the latest articles.
-    """
+    # Fallback to Spaceflight News API (no key)
     try:
-        # Fetch the latest news articles.
-        news_articles = fetch_stellar_news()
-        if not news_articles:
-            # Fallback if the news API fails.
-            news_articles = []
-            
-        # Render the news.html template with the articles.
-        return render_template('news.html', news=news_articles)
-        
+        r = requests.get(f"https://api.spaceflightnewsapi.net/v3/articles?_limit={limit}&_sort=publishedAt:desc", timeout=8)
+        r.raise_for_status()
+        data = r.json()
+        # normalize to common fields used in templates (title, url, summary, image, publishedAt, source)
+        normalized = []
+        for item in data:
+            normalized.append({
+                "title": item.get("title"),
+                "url": item.get("url"),
+                "description": item.get("summary") or item.get("newsSite"),
+                "urlToImage": item.get("imageUrl"),
+                "publishedAt": item.get("publishedAt"),
+                "source": item.get("newsSite") or "Spaceflight News"
+            })
+        return normalized
     except Exception as e:
-        print(f"An error occurred on the news page: {e}")
-        return render_template('error.html', error=str(e))
+        print("SpaceflightNews fetch error:", e)
+        return []
 
-
-@app.route('/poems')
-def poems_page():
-    """
-    Renders the poems page with a dynamically generated poem and static ones.
-    """
+def load_poems():
+    """Load local poems/quotes from data/poems.json (returns list)."""
     try:
-        # Generate a new poem using the Gemini API.
-        generated_poem = generate_stellar_poem("celestial bodies and the vastness of space")
-        
-        # Combine the generated poem with the static poems.
-        all_poems = [{"text": generated_poem, "author": "Gemini AI"}] + static_poems
-        
-        # Render the poems.html template.
-        return render_template('poems.html', poems=all_poems)
-        
+        with open("data/poems.json", "r", encoding="utf-8") as f:
+            return json.load(f)
     except Exception as e:
-        print(f"An error occurred on the poems page: {e}")
-        return render_template('error.html', error=str(e))
+        print("Poems load error:", e)
+        # fallback tiny list
+        return [
+            {"text": "I have loved the stars too fondly to be fearful of the night.", "author": "Sarah Williams"},
+            {"text": "The cosmos is within us. We are made of star-stuff.", "author": "Carl Sagan"}
+        ]
 
+def load_constellations():
+    """Load local constellations from data/constellations.json (returns list)."""
+    try:
+        with open("data/constellations.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print("Constellations load error:", e)
+        return [
+            {"name": "Orion", "desc": "The Hunter — bright belt of three stars, visible during winter nights."},
+            {"name": "Cassiopeia", "desc": "W-shaped constellation, easy to spot near Polaris."}
+        ]
 
-@app.route('/about')
-def about_page():
-    """
-    Renders the About page.
-    """
-    return render_template('about.html')
+# --- Routes ---
 
-
-# A simple API endpoint for a constellation, if needed by a front-end script
-@app.route('/api/constellation')
-def get_constellation():
-    """
-    Returns a random constellation as JSON.
-    """
+@app.route("/")
+def index():
+    apod = fetch_apod()
+    news = fetch_space_news(8)
+    poems = load_poems()
+    poem_of_day = random.choice(poems) if poems else None
+    constellations = load_constellations()
     constellation = random.choice(constellations)
-    return jsonify(constellation)
+
+    return render_template("index.html",
+                           apod=apod,
+                           news=news,
+                           poem=poem_of_day,
+                           constellation=constellation)
+
+@app.route("/about")
+def about_page():
+    return render_template("about.html")
+
+@app.route("/news")
+def news_page():
+    news = fetch_space_news(20) # Fetch more articles for a dedicated page
+    return render_template("news.html", news=news)
+    
+@app.route("/poems")
+def poems_page():
+    poems = load_poems()
+    return render_template("poems.html", poems=poems)
 
 
-if __name__ == '__main__':
+# Serve a simple robots.txt or favicon optionally
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, "static"),
+                               "favicon.ico", mimetype="image/vnd.microsoft.icon")
+
+
+if __name__ == "__main__":
     app.run(debug=True)
+
