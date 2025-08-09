@@ -40,7 +40,6 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
-    <!-- Navigation Bar -->
     <nav class="bg-gray-900 bg-opacity-80 backdrop-filter backdrop-blur-lg p-4 shadow-lg fixed w-full z-10">
         <div class="container flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -80,9 +79,14 @@
             <p class="text-xl mt-4 text-gray-400">Curated stories from the cosmos.</p>
         </header>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <!-- Search Bar -->
+        <div class="mb-12">
+            <input type="text" id="news-search" placeholder="Search for news articles..." class="w-full p-4 rounded-full bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-teal-400 transition-all duration-300" />
+        </div>
+
+        <div id="news-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
             {% for article in news %}
-            <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer" class="block p-8 card">
+            <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer" class="block p-8 card news-article">
                 {% if article.urlToImage %}
                 <img src="{{ article.urlToImage }}" alt="{{ article.title }}" class="rounded-2xl mb-6 w-full h-48 object-cover shadow-md">
                 {% else %}
@@ -90,8 +94,8 @@
                     <p class="text-gray-500 font-bold">No Image Available</p>
                 </div>
                 {% endif %}
-                <h2 class="text-2xl font-bold mb-4 text-teal-400">{{ article.title }}</h2>
-                <p class="text-gray-400 text-sm mb-6 leading-relaxed">{{ article.description }}</p>
+                <h2 class="text-2xl font-bold mb-4 text-teal-400 news-title">{{ article.title }}</h2>
+                <p class="text-gray-400 text-sm mb-6 leading-relaxed news-description">{{ article.description }}</p>
                 <div class="text-gray-500 text-xs">
                     <p>Source: <span class="font-semibold text-gray-400">{{ article.source.name or article.source or "Space News" }}</span></p>
                     <p>Published: {{ article.publishedAt.split('T')[0] }}</p>
@@ -105,7 +109,6 @@
             {% endfor %}
         </div>
     </main>
-    <!-- Footer -->
     <footer class="bg-gray-900 bg-opacity-80 p-6 text-center mt-20 shadow-inner">
         <p class="text-gray-500">&copy; 2024 StellarFeed. All rights reserved. | <a href="https://github.com/mpoojaverma/StellarFeed" target="_blank" class="hover:text-teal-400 transition-colors">GitHub</a></p>
     </footer>
@@ -119,6 +122,43 @@
             } else {
                 menu.classList.remove('flex');
                 menu.classList.add('hidden');
+            }
+        });
+
+        // Interactive search functionality
+        document.getElementById('news-search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const articles = document.querySelectorAll('.news-article');
+            let foundArticles = false;
+
+            articles.forEach(article => {
+                const title = article.querySelector('.news-title').textContent.toLowerCase();
+                const description = article.querySelector('.news-description').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    article.style.display = 'block';
+                    foundArticles = true;
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+
+            const noResultsMessage = document.getElementById('no-results-message');
+            if (foundArticles) {
+                if (noResultsMessage) {
+                    noResultsMessage.style.display = 'none';
+                }
+            } else {
+                if (!noResultsMessage) {
+                    const container = document.getElementById('news-container');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.id = 'no-results-message';
+                    messageDiv.className = 'col-span-full text-center p-16 card';
+                    messageDiv.innerHTML = '<p class="text-2xl text-gray-400 font-bold">No articles found for your search.</p>';
+                    container.appendChild(messageDiv);
+                } else {
+                    noResultsMessage.style.display = 'block';
+                }
             }
         });
     </script>
