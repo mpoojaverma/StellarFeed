@@ -98,20 +98,47 @@ const HomePage = ({ apod, poems, constellation }) => {
 
 // NewsPage Component
 const NewsPage = ({ news }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredNews, setFilteredNews] = useState(news);
+
+  useEffect(() => {
+    const results = news.filter(article =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredNews(results);
+  }, [searchTerm, news]);
+
   if (news.length === 0) {
     return <div className="text-center py-16">No news available.</div>;
   }
+
   return (
     <div className="pt-16">
       <h1 className="text-6xl font-extrabold text-center mb-10">Latest Space News</h1>
+      <div className="mb-8">
+        <input
+          type="text"
+          placeholder="Search for articles..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-4 rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-400"
+        />
+      </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {news.map((article, index) => (
-          <a href={article.url} key={index} className="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl">
-            <img src={article.urlToImage} alt={article.title} className="rounded-lg mb-4 w-full h-48 object-cover" />
-            <h2 className="text-2xl font-bold mb-2 text-teal-400">{article.title}</h2>
-            <p className="text-sm">{article.description}</p>
-          </a>
-        ))}
+        {filteredNews.length > 0 ? (
+          filteredNews.map((article, index) => (
+            <a href={article.url} key={index} className="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl">
+              <img src={article.urlToImage} alt={article.title} className="rounded-lg mb-4 w-full h-48 object-cover" />
+              <h2 className="text-2xl font-bold mb-2 text-teal-400">{article.title}</h2>
+              <p className="text-sm">{article.description}</p>
+            </a>
+          ))
+        ) : (
+          <div className="col-span-full text-center p-16">
+            <p className="text-xl">No articles found for your search.</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -159,4 +186,3 @@ const AboutPage = () => {
 };
 
 export default App;
-
