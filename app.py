@@ -91,16 +91,27 @@ def poems_page():
         except FileNotFoundError:
             static_poems = [{"text": "A cosmic journey begins with a single star.", "author": "Anonymous"}]
 
-        # Generate a new poem with the Gemini API on every visit.
-        generated_poem_text = generate_stellar_poem("celestial bodies, the night sky, and wonder")
-        # Fallback if the Gemini API call fails
-        if not generated_poem_text:
-            generated_poem = {"text": "A whisper from the stars, a story untold.", "author": "StellarFeed AI"}
-        else:
-            generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
+        # A list of topics to generate unique poems for.
+        poem_topics = [
+            "celestial bodies, the night sky, and wonder",
+            "the vastness of space",
+            "the birth of a star",
+            "the quiet beauty of the moon"
+        ]
+
+        generated_poems = []
+        for topic in poem_topics:
+            generated_poem_text = generate_stellar_poem(topic)
+            # Add the new poem to the list only if it was successfully generated.
+            if generated_poem_text and "error" not in generated_poem_text.lower():
+                 generated_poems.append({"text": generated_poem_text, "author": "Gemini AI"})
+            else:
+                 print(f"Failed to generate poem for topic: '{topic}'. Error: {generated_poem_text}")
         
-        # Combine the new poem with the static poems for the page.
-        all_poems = [generated_poem] + static_poems
+        # Combine all the generated poems with all the static poems.
+        all_poems = generated_poems + static_poems
+        
+        print(f"Total poems to display: {len(all_poems)}") # A debug message for Vercel logs
         
         return render_template('poems.html', poems=all_poems)
         
