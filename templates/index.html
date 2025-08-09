@@ -34,6 +34,14 @@
             background-clip: text;
             color: transparent;
         }
+        .galaxy-arms {
+            animation: spin 8s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
@@ -42,10 +50,20 @@
         <div class="container flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <a href="/" class="flex items-center justify-center space-x-2">
+                    <!-- Updated SVG logo with a more creative and dynamic design -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400">
-                        <path d="M12 2L2 22h20L12 2z" />
-                        <path d="M12 5L5 19h14L12 5z" />
-                        <circle cx="12" cy="12" r="3" fill="#60a5fa"/>
+                        <defs>
+                            <linearGradient id="galaxyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6ee7b7"/>
+                                <stop offset="100%" stop-color="#3b82f6"/>
+                            </linearGradient>
+                        </defs>
+                        <g class="galaxy-arms" stroke="url(#galaxyGradient)">
+                            <path d="M12 2c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zM12 4a8 8 0 0 0-8 8M12 4a8 8 0 0 1 8 8"/>
+                            <path d="M12 20a8 8 0 0 0 8-8" stroke-opacity="0.8"/>
+                            <path d="M12 20a8 8 0 0 1-8-8" stroke-opacity="0.8"/>
+                        </g>
+                        <circle cx="12" cy="12" r="2" fill="url(#galaxyGradient)" class="animate-pulse"/>
                     </svg>
                     <span class="text-3xl font-extrabold gradient-text">StellarFeed</span>
                 </a>
@@ -71,7 +89,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="pt-40 container min-h-screen">
+    <main class="pt-32 container min-h-screen">
         <header class="text-center mb-16">
             <h1 class="text-6xl font-extrabold gradient-text leading-tight">
                 Your Daily Dose of the Cosmos
@@ -146,4 +164,3 @@
     </script>
 </body>
 </html>
-
