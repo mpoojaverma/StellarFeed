@@ -21,17 +21,14 @@ def fetch_stellar_news():
         list: A list of dictionaries, where each dictionary represents a news article.
               Returns an empty list if an error occurs.
     """
-    # Replace 'YOUR_API_KEY' with your actual API key from newsapi.org.
-    # It's a good practice to store this in an environment variable, but for
-    # this example, we'll keep it here for clarity.
-    api_key = "YOUR_API_KEY"
+    api_key = "f9e1b969fcf1442fac75885c6cf66573"
 
     # The API endpoint for fetching top headlines. We can use the 'everything'
     # endpoint for more specific searches.
     api_url = "https://newsapi.org/v2/everything"
     
     # Check if the API key has been provided.
-    if api_key == "YOUR_API_KEY" or not api_key:
+    if api_key == "f9e1b969fcf1442fac75885c6cf66573" or not api_key:
         print("Error: API key is missing. Please sign up for a key at newsapi.org and update the script.")
         return []
 
