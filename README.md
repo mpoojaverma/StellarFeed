@@ -39,6 +39,6 @@
 
 ---
 
-This project meets the requirements for a second-year student by integrating multiple third-party APIs, providing a dynamic user experience, and using a modern, component-based structure.
+This project meets the requirements for a second-year student by integrating multiple third-party APIs, providing a dynamic user experience, and using a modern and defined structure.
 
 
