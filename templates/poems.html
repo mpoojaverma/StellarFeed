@@ -3,60 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stellar Poems - StellarFeed</title>
-    <!-- Use Tailwind CSS for a clean and responsive design -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Cosmic Poems - StellarFeed</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0b0c10;
+            background-color: #0d1117;
             color: #c5c6c7;
         }
         .container {
             max-width: 1200px;
-        }
-        .card {
-            background-color: #1f2833;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
+            margin: 0 auto;
+            padding: 1rem;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="container mx-auto">
-        <header class="text-center my-8">
-            <a href="/" class="text-teal-400 hover:underline">
-                <h1 class="text-4xl md:text-5xl font-bold">StellarFeed</h1>
-            </a>
-            <p class="text-md md:text-lg mt-2 text-gray-400">Deep thoughts from the vastness of space.</p>
-        </header>
-
-        <!-- Stellar Poems Section -->
-        <section class="my-10">
-            <h2 class="text-3xl font-bold text-gray-200 mb-6 text-center">Stellar Thoughts & Poems</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% if poems %}
-                    {% for poem in poems %}
-                    <div class="card rounded-lg p-6">
-                        <p class="text-lg italic text-gray-300">"{{ poem.text }}"</p>
-                        <p class="text-sm text-gray-500 mt-2">— {{ poem.author }}</p>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="text-gray-400 text-center col-span-full">
-                        No poems found. Check the data/poems.json file.
-                    </p>
-                {% endif %}
+<body class="bg-gray-900 text-gray-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full z-10">
+        <div class="container flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400">
+                        <path d="M12 2L2 22h20L12 2z" />
+                        <path d="M12 5L5 19h14L12 5z" />
+                        <circle cx="12" cy="12" r="3" fill="#c5c6c7"/>
+                    </svg>
+                    <a href="/" class="text-xl font-bold text-teal-400 hover:text-teal-200 transition-colors duration-300">StellarFeed</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/news" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">News</a>
+                    <a href="/poems" class="text-gray-300 hover:text-teal-400 transition-colors duration-300 font-bold">Poems</a>
+                    <a href="/about" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">About</a>
+                </div>
             </div>
-        </section>
-    </div>
+            <div class="md:hidden">
+                <button id="menu-button" class="text-gray-300 hover:text-teal-400 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-800 text-center transition-all duration-300 ease-in-out">
+            <a href="/news" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">News</a>
+            <a href="/poems" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">Poems</a>
+            <a href="/about" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">About</a>
+        </div>
+    </nav>
+    <main class="pt-24 container min-h-screen">
+        <h1 class="text-4xl font-extrabold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+            Cosmic Poems
+        </h1>
+        <p class="text-xl text-center mb-12 text-gray-400">Timeless thoughts from the greatest minds.</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for poem in poems %}
+            <div class="p-6 bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <p class="text-lg italic text-gray-200 leading-relaxed">"{{ poem.text }}"</p>
+                    <p class="mt-4 text-right font-semibold text-teal-400">- {{ poem.author }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-800 p-4 text-center mt-12 shadow-inner">
+        <p class="text-gray-400">&copy; 2024 StellarFeed. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
-
