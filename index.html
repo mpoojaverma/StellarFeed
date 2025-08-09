@@ -1,1 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StellarFeed — What's in the Sky Tonight?</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">✨</div>
+        <div>
+          <h1>StellarFeed</h1>
+          <p class="sub">Daily celestial images, space news & short cosmic poems.</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#apod">APOD</a>
+        <a href="#news">News</a>
+        <a href="#poem">Poem</a>
+        <a href="#constellation">Constellation</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-left">
+          <h2>What’s in the sky tonight?</h2>
+          <p>Explore breathtaking space photography, curated astronomy headlines, and a tiny poem to match your mood.</p>
+          <a class="cta" href="#apod">Explore the Sky</a>
+        </div>
+        <div class="hero-right">
+          <div class="hero-card">
+            <div class="poem-small">“{{ poem.text }}” <span class="author">— {{ poem.author }}</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APOD -->
+      <section id="apod" class="section">
+        <h3>Astronomy Picture of the Day</h3>
+        <div class="apod-card">
+          {% if apod.media_type == 'video' %}
+            <div class="video-wrap">
+              <iframe src="{{ apod.url }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+          {% else %}
+            <img src="{{ apod.url }}" alt="{{ apod.title }}">
+          {% endif %}
+          <div class="apod-text">
+            <h4>{{ apod.title }}</h4>
+            <p class="apod-date">{{ apod.date }}</p>
+            <p class="apod-desc">{{ apod.explanation }}</p>
+            <div class="apod-actions">
+              <a href="{{ apod.hdurl or apod.url }}" target="_blank" class="btn">Open Full</a>
+              <a href="{{ apod.hdurl or apod.url }}" download class="btn">Download</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- News -->
+      <section id="news" class="section">
+        <h3>Latest Space & Astronomy News</h3>
+        <div class="news-grid">
+          {% for article in news %}
+            <article class="news-card">
+              <a href="{{ article.url }}" target="_blank">
+                <div class="thumb">
+                  <img src="{{ article.urlToImage or '/static/images/news-placeholder.jpg' }}" alt="{{ article.title }}">
+                </div>
+                <div class="news-body">
+                  <h4>{{ article.title }}</h4>
+                  <p class="meta">{{ article.source.name if article.source else article.source or '' }} • {{ article.publishedAt[:10] if article.publishedAt else '' }}</p>
+                  <p class="excerpt">{{ (article.description or '')[:160] }}{% if (article.description or '')|length > 160 %}...{% endif %}</p>
+                </div>
+              </a>
+            </article>
+          {% else %}
+            <p>No space news available at the moment.</p>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- Poem -->
+      <section id="poem" class="section">
+        <h3>Space Poem & Quotes</h3>
+        <div class="poem-block">
+          <blockquote>“{{ poem.text }}”</blockquote>
+          <p class="author">— {{ poem.author }}</p>
+        </div>
+      </section>
+
+      <!-- Constellation -->
+      <section id="constellation" class="section">
+        <h3>Constellation of the Day</h3>
+        <div class="const-card">
+          <h4>{{ constellation.name }}</h4>
+          <p>{{ constellation.desc }}</p>
+          <p class="hint">Tip: Look for this constellation near the appropriate seasonal months.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>StellarFeed • NASA APOD • Space News • Curated poems • Built with ❤️</p>
+      <p><small>API keys kept in server (.env) — do not share secrets on GitHub.</small></p>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
 
