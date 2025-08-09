@@ -1,26 +1,44 @@
-StellarFeed 🌌
+# 🌌 StellarFeed  
+## *Your Daily Journey Through the Cosmos*
 
-| Your Daily Journey Through the Cosmos |
+**StellarFeed** is a **dynamic** and **interactive** web application that serves as your **daily hub** for diverse cosmic content. Built to be visually stunning and user-friendly, it integrates with powerful external APIs to provide **real-time information** on astronomy news, breathtaking celestial photography, and original space-themed poetry.
 
-StellarFeed is a dynamic and interactive web application that serves as your daily hub for diverse cosmic content. Built to be interactive and visually appealing, it integrates with external APIs to provide real-time information on astronomy news, celestial photography, and original poetry.
+---
 
-Key Features 🚀
-Astronomy Picture of the Day (APOD): A homepage that fetches and displays a new image from NASA's official APOD API on every visit.
+### 🚀 Key Features
 
-Real-Time News: A dedicated "News" page with a real-time search bar that allows users to find recent articles on space and astronomy. The data is fetched from the NewsAPI.org.
+- **Astronomy Picture of the Day (APOD)**  
+  A captivating homepage that fetches and displays a new image from NASA's official **APOD API** every time you visit.
 
-Generative Poetry: A "Poems" page that dynamically generates unique, space-themed poetry using the Google Gemini API, alongside a collection of classic space-related quotes.
+- **Real-Time News**  
+  Explore the latest space and astronomy headlines on the dedicated **News** page — featuring a real-time search bar powered by **NewsAPI.org** for the freshest updates.
 
-Responsive and Polished UI/UX: The entire website is designed with a sleek, dark theme and is fully responsive, ensuring a great user experience on both desktop and mobile devices.
+- **Generative Poetry**  
+  Discover unique, space-inspired poems dynamically generated using the **Google Gemini API**, alongside a curated collection of classic space-related quotes on the **Poems** page.
 
-API Integrations 🔌
-StellarFeed relies on the following third-party APIs to deliver its dynamic content:
+- **Responsive and Polished UI/UX**  
+  Experience StellarFeed in a sleek, **dark theme** that looks amazing on both desktop and mobile devices, with fully responsive design ensuring smooth navigation and readability.
 
-NASA APOD API: For the daily astronomy picture.
+---
 
-NewsAPI.org: For fetching the latest news headlines related to space.
+### 🔌 API Integrations
 
-Google Gemini API: For generating creative and unique poetry.
+- **NASA APOD API** — for the daily awe-inspiring astronomy picture  
+- **NewsAPI.org** — for fetching the latest space news articles  
+- **Google Gemini API** — for generating creative, out-of-this-world poetry  
 
-Developed by 👩‍💻
-Pooja Verma
+---
+
+*Embark on your cosmic adventure every day with StellarFeed!*  
+
+---
+
+### 👩‍💻 Developed by
+
+**Pooja Verma M**
+
+---
+
+This project meets the requirements for a second-year student by integrating multiple third-party APIs, providing a dynamic user experience, and using a modern, component-based structure.
+
+
