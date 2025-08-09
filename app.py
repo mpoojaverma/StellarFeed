@@ -40,6 +40,14 @@ def home():
 
         # Fetch a fresh APOD image and select a new poem/constellation for the main page.
         apod_data = fetch_random_apod_image()
+        # Fallback if the APOD API call fails
+        if apod_data is None:
+            apod_data = {
+                "title": "APOD Currently Unavailable",
+                "url": "https://placehold.co/1200x675/0d1117/c5c6c7?text=Image+Not+Available",
+                "explanation": "Could not fetch the Astronomy Picture of the Day. Please check the NASA API key."
+            }
+
         poem_of_day = random.choice(static_poems)
         constellation_of_day = random.choice(constellations)
         
@@ -58,6 +66,10 @@ def news_page():
     try:
         # Fetch news every time the page is visited.
         news_articles = fetch_stellar_news()
+        # Fallback if the News API call fails
+        if not news_articles:
+            news_articles = [{"title": "News Feed Currently Unavailable", "url": "#", "description": "Could not fetch news articles. Please check the News API key.", "urlToImage": "https://placehold.co/600x400/0d1117/c5c6c7?text=News+Not+Available", "source": {"name": "StellarFeed"}}]
+            
         return render_template('news.html', news=news_articles)
         
     except Exception as e:
@@ -81,7 +93,11 @@ def poems_page():
 
         # Generate a new poem with the Gemini API on every visit.
         generated_poem_text = generate_stellar_poem("celestial bodies, the night sky, and wonder")
-        generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
+        # Fallback if the Gemini API call fails
+        if not generated_poem_text:
+            generated_poem = {"text": "A whisper from the stars, a story untold.", "author": "StellarFeed AI"}
+        else:
+            generated_poem = {"text": generated_poem_text, "author": "Gemini AI"}
         
         # Combine the new poem with the static poems for the page.
         all_poems = [generated_poem] + static_poems
