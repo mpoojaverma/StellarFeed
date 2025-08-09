@@ -1,106 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <div class="flex items-center justify-center space-x-2">
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400">
-        <path d="M12 2L2 22h20L12 2z" />
-        <path d="M12 5L5 19h14L12 5z" />
-        <circle cx="12" cy="12" r="3" fill="#c5c6c7"/>
-    </svg>
-    <span class="text-2xl font-bold text-teal-400">StellarFeed</span>
-</div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StellarFeed</title>
-    <!-- Use Tailwind CSS for a clean and responsive design -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use Inter font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>StellarFeed - Your Daily Dose of the Cosmos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0b0c10;
-            color: #c5c6c7;
+            background-color: #0d1117; /* Dark background */
+            color: #c5c6c7; /* Light gray text */
         }
         .container {
             max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
         }
-        .card {
-            background-color: #1f2833;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
+        .text-neon-cyan {
+            color: #0ff;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="container mx-auto">
-        <header class="text-center my-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-teal-400">StellarFeed</h1>
-            <p class="text-md md:text-lg mt-2 text-gray-400">Your daily dose of the cosmos.</p>
-        </header>
+<body class="bg-gray-900 text-gray-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 p-4 shadow-lg fixed w-full z-10">
+        <div class="container flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400">
+                        <path d="M12 2L2 22h20L12 2z" />
+                        <path d="M12 5L5 19h14L12 5z" />
+                        <circle cx="12" cy="12" r="3" fill="#c5c6c7"/>
+                    </svg>
+                    <a href="/" class="text-xl font-bold text-teal-400 hover:text-teal-200 transition-colors duration-300">StellarFeed</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/news" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">News</a>
+                    <a href="/poems" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">Poems</a>
+                    <a href="/about" class="text-gray-300 hover:text-teal-400 transition-colors duration-300">About</a>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-button" class="text-gray-300 hover:text-teal-400 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-800 text-center transition-all duration-300 ease-in-out">
+            <a href="/news" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">News</a>
+            <a href="/poems" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">Poems</a>
+            <a href="/about" class="block py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-300">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 container min-h-screen">
+        <h1 class="text-4xl font-extrabold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+            StellarFeed
+        </h1>
+        <p class="text-xl text-center mb-12 text-gray-400">Your daily dose of the cosmos.</p>
 
         <!-- APOD Section -->
-        <section class="my-10">
-            <h2 class="text-3xl font-bold text-gray-200 mb-4 text-center">Astronomy Picture of the Day</h2>
-            <div class="card rounded-lg overflow-hidden md:flex flex-row-reverse items-center p-4">
-                <!-- Check if the media is a video or image and display accordingly -->
-                {% if 'youtube' in apod.url or 'vimeo' in apod.url %}
-                    <div class="md:w-1/2 flex-shrink-0">
-                        <iframe class="w-full aspect-video rounded-lg" src="{{ apod.url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                {% else %}
-                    <div class="md:w-1/2 flex-shrink-0">
-                        <img src="{{ apod.url }}" alt="{{ apod.title }}" class="w-full h-auto rounded-lg object-cover">
-                    </div>
-                {% endif %}
-                <div class="md:w-1/2 md:pr-8 mt-4 md:mt-0 p-4">
-                    <h3 class="text-2xl font-semibold text-white mb-2">{{ apod.title }}</h3>
-                    <p class="text-gray-400">{{ apod.explanation }}</p>
+        <section class="mb-12 p-6 bg-gray-800 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 text-teal-400">{{ apod.title }}</h2>
+            <div class="md:flex md:space-x-8">
+                <div class="md:w-1/2 mb-6 md:mb-0">
+                    <img src="{{ apod.url }}" alt="{{ apod.title }}" class="rounded-lg shadow-xl w-full h-auto object-cover">
+                </div>
+                <div class="md:w-1/2 text-gray-300">
+                    <p class="leading-relaxed">{{ apod.explanation }}</p>
                 </div>
             </div>
         </section>
 
-        <!-- Stellar News Section -->
-        <section class="my-10">
-            <h2 class="text-3xl font-bold text-gray-200 mb-4 text-center">Latest Space News</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for article in news %}
-                <a href="{{ article.url }}" target="_blank" class="card rounded-lg p-4 block hover:shadow-lg">
-                    <img src="{{ article.urlToImage }}" onerror="this.onerror=null;this.src='/static/images/apod-placeholder.jpg';" class="w-full h-40 object-cover rounded-md mb-4">
-                    <h3 class="text-xl font-semibold text-white mb-2">{{ article.title }}</h3>
-                    <p class="text-sm text-gray-400 mb-2">{{ article.description }}</p>
-                    <span class="text-xs text-gray-500">Source: {{ article.source }}</span>
-                </a>
-                {% endfor %}
-            </div>
-        </section>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Poem Section -->
+            <section class="p-6 bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4 text-cyan-400">Poem of the Day</h2>
+                    {% if poem %}
+                    <p class="text-lg italic text-gray-200 leading-relaxed">"{{ poem.text }}"</p>
+                    <p class="mt-4 text-right text-gray-400">- {{ poem.author }}</p>
+                    {% else %}
+                    <p class="text-lg italic text-gray-400">No poem available today.</p>
+                    {% endif %}
+                </div>
+                <div class="mt-8 text-center">
+                    <a href="/poems" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-colors duration-300">View All Poems</a>
+                </div>
+            </section>
 
-        <!-- Poem & Constellation Section -->
-        <section class="my-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Poem of the Day -->
-            <div class="card rounded-lg p-6">
-                <h2 class="text-2xl font-bold text-gray-200 mb-4">Stellar Thought of the Day</h2>
-                {% if poem %}
-                    <p class="text-lg italic text-gray-300">"{{ poem.text }}"</p>
-                    <p class="text-sm text-gray-500 mt-2">— {{ poem.author }}</p>
-                {% else %}
-                    <p class="text-lg italic text-gray-300">"The cosmos is within us. We are made of star-stuff."</p>
-                    <p class="text-sm text-gray-500 mt-2">— Carl Sagan</p>
-                {% endif %}
-            </div>
+            <!-- Constellation Section -->
+            <section class="p-6 bg-gray-800 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4 text-teal-400">Constellation of the Day</h2>
+                    {% if constellation %}
+                    <p class="text-lg font-semibold text-gray-200">{{ constellation.name }}</p>
+                    <p class="mt-2 text-gray-300 leading-relaxed">{{ constellation.desc }}</p>
+                    {% else %}
+                    <p class="text-lg italic text-gray-400">No constellation available today.</p>
+                    {% endif %}
+                </div>
+                <div class="mt-8 text-center">
+                    <button class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-colors duration-300">Discover More</button>
+                </div>
+            </section>
+        </div>
+    </main>
 
-            <!-- Constellation of the Day -->
-            <div class="card rounded-lg p-6">
-                <h2 class="text-2xl font-bold text-gray-200 mb-4">Constellation of the Day</h2>
-                <h3 class="text-xl font-semibold text-teal-400">{{ constellation.name }}</h3>
-                <p class="text-gray-400 mt-2">{{ constellation.desc }}</p>
-            </div>
-        </section>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 p-4 text-center mt-12 shadow-inner">
+        <p class="text-gray-400">&copy; 2024 StellarFeed. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
