@@ -8,10 +8,6 @@ import os
 # from the NASA API. It uses a publicly available demo key, so no
 # manual setup is required to get started.
 
-# The function tries to find an image for a random date within a
-# safe range. Sometimes a date might have a video or other media,
-# so the code is designed to try a few times to find a suitable
-# image.
 
 def fetch_random_apod_image():
     """
@@ -22,16 +18,15 @@ def fetch_random_apod_image():
         dict: A dictionary containing the image's title, URL, and explanation,
               or None if an error occurs or no image is found.
     """
-    # Using the NASA DEMO_KEY. This key has rate limits but is great for
-    # getting started without needing to register for your own key.
+    # Using the NASA DEMO_KEY.
     api_key = "DEMO_KEY"
 
     # The NASA APOD API endpoint.
     api_url = "https://api.nasa.gov/planetary/apod"
 
     # Define the date range to fetch from. NASA's API has data from 1995.
-    # We will use a range from January 1, 2020, to the current date to
-    # ensure a high likelihood of finding a suitable image.
+    # use a range from January 1, 2020, to the current date to
+    # ensure finding a suitable image.
     start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date.today()
 
@@ -85,8 +80,7 @@ def fetch_random_apod_image():
     print("Could not find a valid image after multiple attempts.")
     return None
 
-# The code below demonstrates how to use the function.
-# It will run automatically when you execute this script.
+
 if __name__ == "__main__":
     image_data = fetch_random_apod_image()
     if image_data:
