@@ -6,7 +6,7 @@ from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
 
-# We need to explicitly import our custom modules to use their functions.
+# import custom modules to use their functions.
 from news_fetcher import fetch_stellar_news
 from poem_generator import generate_stellar_poem
 from image_fetcher import fetch_random_apod_image
@@ -40,7 +40,6 @@ def home():
 
         # Fetch a fresh APOD image and select a new poem/constellation for the main page.
         apod_data = fetch_random_apod_image()
-        # Fallback if the APOD API call fails
         if apod_data is None:
             apod_data = {
                 "title": "APOD Currently Unavailable",
@@ -66,7 +65,7 @@ def news_page():
     try:
         # Fetch news every time the page is visited.
         news_articles = fetch_stellar_news()
-        # Fallback if the News API call fails
+       
         if not news_articles:
             news_articles = [{"title": "News Feed Currently Unavailable", "url": "#", "description": "Could not fetch news articles. Please check the News API key.", "urlToImage": "https://placehold.co/600x400/0d1117/c5c6c7?text=News+Not+Available", "source": {"name": "StellarFeed"}}]
             
