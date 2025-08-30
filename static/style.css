@@ -86,6 +86,9 @@ blockquote{margin:0;font-style:italic;color:#f0f7ff;font-size:18px}
 .footer{text-align:center;padding:20px;color:var(--muted);font-size:13px;margin-top:34px;border-top:1px solid rgba(255,255,255,0.02)}
 
 /* Responsive */
+/*	Media queries → mobile-friendly layout.
+Flex-direction: column → content vertically on small screens. Ensures usability across devices.
+*/
 @media(max-width:900px){
   .hero{flex-direction:column}
   .hero p{max-width:100%}
