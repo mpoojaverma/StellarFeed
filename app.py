@@ -1,10 +1,11 @@
-import os
-import random
-import json
-from flask import Flask, render_template, jsonify
-from flask_cors import CORS
-import requests
-from dotenv import load_dotenv
+import os #module to interact with the operating system
+import random #Used here to pick a random poem or constellation
+import json #JavaScript Object Notation - json makes it easy to read data into Python objects and modify or process the data
+from flask import Flask, render_template, jsonify #makes Python code interact with the web so users can open pages in a browser
+#micro web framework for Python used to build web applications quickly with minimal setup
+from flask_cors import CORS #Cross-Origin Resource Sharing allows the app to be accessed by frontend scripts from other origins (useful for APIs)
+import requests #Used inside fetchers to call APIs
+from dotenv import load_dotenv #Loads environment variables
 
 # import custom modules to use their functions.
 from news_fetcher import fetch_stellar_news
@@ -13,17 +14,15 @@ from image_fetcher import fetch_random_apod_image
 
 load_dotenv() # loads variables from .env
 
+#App Initialization
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Enable CORS for the app
 
 # --- Application Routes ---
 
-@app.route('/')
+@app.route('/') #Defines what happens when a user visits the homepage
 def home():
-    """
-    Renders the homepage with dynamic content.
-    The homepage focuses on the APOD, and provides links to other pages.
-    """
+    
     try:
         # Load static data from files within the route function to prevent startup crashes.
         try:
@@ -51,6 +50,11 @@ def home():
         constellation_of_day = random.choice(constellations)
         
         return render_template('index.html', apod=apod_data, poem=poem_of_day, constellation=constellation_of_day)
+        # render_template is a Flask function that renders HTML files from templates folder.
+        # inject dynamic data (like API responses) into the HTML
+        # The app isn’t just static HTML.
+        # need APOD image, news articles, and poems to change based on API responses.
+        # render_template allows you to pass Python variables into HTML, making the page dynamic.
 
     except Exception as e:
         print(f"Error on home page: {e}")
@@ -59,9 +63,6 @@ def home():
 
 @app.route('/news')
 def news_page():
-    """
-    Renders the dedicated news page with fresh articles.
-    """
     try:
         # Fetch news every time the page is visited.
         news_articles = fetch_stellar_news()
@@ -78,10 +79,7 @@ def news_page():
 
 @app.route('/poems')
 def poems_page():
-    """
-    Renders the poems page with a dynamic poem from the Gemini API
-    and the rest from the static JSON file.
-    """
+    
     try:
         # Load static data from file within the route function.
         try:
@@ -121,15 +119,13 @@ def poems_page():
 
 @app.route('/about')
 def about_page():
-    """
-    Renders the about page with details about the app and APIs.
-    """
+  
     return render_template('about.html')
 
 
 @app.route("/favicon.ico")
-def favicon():
-    """Serves the favicon."""
+def favicon(): #Prevents 404 errors for the browser icon
+   
     return send_from_directory(os.path.join(app.root_path, "static"),
                                "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
