@@ -25,8 +25,6 @@ def fetch_random_apod_image():
     api_url = "https://api.nasa.gov/planetary/apod"
 
     # Define the date range to fetch from. NASA's API has data from 1995.
-    # use a range from January 1, 2020, to the current date to
-    # ensure finding a suitable image.
     start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date.today()
 
